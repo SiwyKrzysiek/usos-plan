@@ -10,5 +10,6 @@ namespace WyborGrupUSOS.Models
     {
         public string StatusCode { get; set; }
         public HtmlNodeCollection Dane { get; set; }
+        public List<UnivesityClass> Classes { get; set; }
     }
 }

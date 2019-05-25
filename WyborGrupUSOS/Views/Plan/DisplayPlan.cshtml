@@ -5,11 +5,17 @@
 
 <h2>Otrzymany kod stanu: @Model.StatusCode</h2>
 
-<h2>Linki do przedmiotów:</h2>
+@*<h2>Linki do przedmiotów:</h2>*@
 
-@foreach (var item in Model.Dane) 
+@*@foreach (var item in Model.Dane) 
 { 
     <p> 
         <a href="@item.Attributes["href"].Value">@item.Attributes["href"].Value</a> 
     </p> 
-} 
+}*@ 
+
+<h2>Lista przedmiotów:</h2>
+@foreach(var universityClass in Model.Classes)
+{
+    <p>@universityClass.Name</p>
+}
