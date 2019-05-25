@@ -1,0 +1,27 @@
+﻿@model WebsiteLink
+@{
+    ViewData["Title"] = "Wczytanie planu";
+}
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <h2>Wczytanie planu semestranlego z USOSa</h2>
+
+        <h3>Wklej poniżej model do swojego planu</h3>
+        @using (Html.BeginForm("LoadPlan", "Plan"))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                @Html.LabelFor(m => m.Link)
+                @Html.EditorFor(m => m.Link, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(m => m.Link)
+            </div>
+            <button type="submit" class="btn btn-primary">Pobierz</button>
+        }
+
+    </div>
+
+</div>
+
+
