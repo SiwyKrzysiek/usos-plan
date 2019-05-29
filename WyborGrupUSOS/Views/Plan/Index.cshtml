@@ -8,7 +8,7 @@
     <div class="col-sm-12">
         <h2>Wczytanie planu semestranlego z USOSa</h2>
 
-        <h3>Wklej poniżej model do swojego planu</h3>
+        <h3>Wklej poniżej link do swojego planu</h3>
         @using (Html.BeginForm("LoadPlan", "Plan"))
         {
             @Html.AntiForgeryToken()
@@ -17,11 +17,26 @@
                 @Html.EditorFor(m => m.Link, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(m => m.Link)
             </div>
-            <button type="submit" class="btn btn-primary">Pobierz</button>
+            <button type="submit" class="btn btn-primary" style="margin-right: 1%">Wczytaj plan</button>
+            <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#additionalInfo" aria-expanded="false" aria-controls="additionalInfo">
+                <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+            </button>
         }
-
     </div>
 
+</div>
+
+<div class="row collapse" id="additionalInfo" style="margin-top: 2%">
+    <div class="col-sm-12">
+        <div class="well">
+            <h3>O jaki link chodzi</h3>
+            <p>Potrzebny jest odnośnik do planu przedstawiającego rozkład wszyskich przedmiotów i grup na wybrany semestr.</p>
+            <a href="https://usosweb.uw.edu.pl/kontroler.php?_action=katalog2/przedmioty/pokazPlanGrupyPrzedmiotow&grupa_kod=1900-1GF21&cdyd_kod=2019Z&plan_showSettings=1&plan_showStartTime=1&plan_showEndTime=1&plan_showTypeShort=1&plan_showTypeFull=0&plan_showGroupNumber=1&plan_showCourseName=1&plan_showCourseCode=0&plan_showRoom=1&plan_showBuildingCode=1&plan_showLecturers=1&plan_overridePrintWidth=1&plan_format=gif&plan_colorScheme=default">Przykładowy plan</a>
+
+            <h3>Gdzie szukać liknu do planu?</h3>
+            <p>Odnośnik do planu może być zamieszczony na stronie Twojego wydziału.</p>
+        </div>
+    </div>
 </div>
 
 
