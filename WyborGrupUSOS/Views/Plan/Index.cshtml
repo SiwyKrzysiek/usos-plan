@@ -3,6 +3,10 @@
     ViewData["Title"] = "Wczytanie planu";
 }
 
+@section Head
+{
+    <link rel="stylesheet" href="~/css/loader.css" />
+}
 
 <div class="row">
     <div class="col-sm-12">
@@ -15,9 +19,10 @@
             <div class="form-group">
                 @Html.LabelFor(m => m.Link)
                 @Html.EditorFor(m => m.Link, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(m => m.Link,  "",new { @class = "text-danger" })
+                @Html.ValidationMessageFor(m => m.Link, "", new { @class = "text-danger" })
             </div>
-            <button type="submit" class="btn btn-primary" style="margin-right: 1%">Wczytaj plan</button>
+            <button id="submit" type="submit" class="btn btn-primary" style="margin-right: 1%">Wczytaj plan</button>
+
             <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#additionalInfo" aria-expanded="false" aria-controls="additionalInfo">
                 <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
             </button>
@@ -25,6 +30,8 @@
     </div>
 
 </div>
+
+<div id="loaderSpot"></div>
 
 <div class="row collapse" id="additionalInfo" style="margin-top: 2%">
     <div class="col-sm-12">
@@ -39,4 +46,38 @@
     </div>
 </div>
 
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            document.getElementById("submit").addEventListener("click", showLoader);
+        });
 
+        function showLoader() {
+            let loader = createLoader();
+
+            let container = document.getElementById("loaderSpot");
+            clearChildren(container);
+
+            document.getElementById("loaderSpot").appendChild(loader);
+        }
+
+        function createLoader() {
+            let loader = document.createElement("div");
+            loader.id = "preloader";
+
+            let innerLoader = document.createElement("div");
+            innerLoader.id = "loader";
+
+            loader.appendChild(innerLoader);
+
+            return loader;
+        }
+
+        function clearChildren(element) {
+            while (element.lastChild) {
+                element.removeChild(element.lastChild);
+            }
+        }
+    </script>
+}
