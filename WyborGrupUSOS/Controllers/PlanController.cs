@@ -23,11 +23,11 @@ namespace WyborGrupUSOS.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> LoadPlan(WebsiteLink model)
+        public async Task<IActionResult> LoadPlan(UsosLink model)
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View("Index", model);
             }
 
             HttpClient hc = new HttpClient();

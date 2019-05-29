@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace WyborGrupUSOS.Models
 {
-    public class WebsiteLink
+    public class UsosLink
     {
-        [Required]
+        [Required(ErrorMessage = "Link do Usosa jest wymagany")]
         public string Link { get; set; }
     }
 }
