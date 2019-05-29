@@ -4,6 +4,8 @@ Alternatywny temat projektu indywidualnego.
 
 Celem aplikacji jest wizualizacja planu studiów w zależności od grup na podstawie planu modelowego z serwisu Usos.
 
+Aplikacja jest dostępna pod [adresem](http://usos-plan.azurewebsites.net).
+
 ## Opis problemu
 
 Na niektórych uczelniach studenci sami organizują swój plan zamiast być przydzielenie do konkretnych grup, jak to ma miejsce na Politechnice Warszawskiej. Największą uczelnią stosującą tego typu rozwiązanie jest Uniwersytet Warszawski.
