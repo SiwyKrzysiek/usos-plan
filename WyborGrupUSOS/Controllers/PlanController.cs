@@ -48,12 +48,12 @@ namespace WyborGrupUSOS.Controllers
             return View("DisplayPlan", plan);
         }
 
-        private async Task<List<UnivesityClass>> ExtractClasses(HtmlDocument planPage)
+        private async Task<List<UniversityClass>> ExtractClasses(HtmlDocument planPage)
         {
             var classesLinks = planPage.DocumentNode.SelectNodes(@"//map").First().ChildNodes;
             var httpClient = new HttpClient();
 
-            var results = new List<UnivesityClass>(classesLinks.Count);
+            var results = new List<UniversityClass>(classesLinks.Count);
             foreach (var link in classesLinks)
             {
                 string url = link.Attributes["href"].Value;
@@ -71,7 +71,7 @@ namespace WyborGrupUSOS.Controllers
 
                 var className = textNode.SelectSingleNode(@"a").InnerText;
 
-                results.Add(new UnivesityClass() {Name = className});
+                results.Add(new UniversityClass() {Name = className});
             }
 
             return results;
