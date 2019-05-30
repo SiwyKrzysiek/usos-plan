@@ -30,8 +30,8 @@ namespace WyborGrupUSOS.Controllers
                 return View("Index", model);
             }
 
-            HttpClient hc = new HttpClient();
-            HttpResponseMessage result = await hc.GetAsync(model.Link);
+            HttpClient httpClient = new HttpClient();
+            HttpResponseMessage result = await httpClient.GetAsync(model.Link);
             Plan plan = new Plan { StatusCode = result.StatusCode.ToString()};
 
             Stream stream = await result.Content.ReadAsStreamAsync();
@@ -40,7 +40,7 @@ namespace WyborGrupUSOS.Controllers
             doc.Load(stream);
 
             HtmlNodeCollection classesLinks = doc.DocumentNode.SelectNodes(@"//map").First().ChildNodes;
-            var classes = await ExtractClasses(doc);
+            var classes = await ExtractClasses(doc, httpClient);
 
             plan.Dane = classesLinks;
             plan.Classes = classes;
@@ -52,11 +52,11 @@ namespace WyborGrupUSOS.Controllers
         /// Extract all classes from main view of Usos plan
         /// </summary>
         /// <param name="planPage">Default semester plan page</param>
+        /// <param name="httpClient">Client used to download data</param>
         /// <returns>List of classes</returns>
-        private async Task<List<UniversityClass>> ExtractClasses(HtmlDocument planPage)
+        private async Task<List<UniversityClass>> ExtractClasses(HtmlDocument planPage, HttpClient httpClient)
         {
             var classesLinks = planPage.DocumentNode.SelectNodes(@"//map").First().ChildNodes;
-            var httpClient = new HttpClient();
 
             var results = new List<UniversityClass>(classesLinks.Count);
             foreach (var link in classesLinks)
@@ -87,9 +87,8 @@ namespace WyborGrupUSOS.Controllers
         /// </summary>
         /// <param name="classPageLink">Link to class details</param>
         /// <returns></returns>
-        private async Task<UniversityClass> ExtractSingeClass(string classPageLink)
+        private async Task<UniversityClass> ExtractSingeClass(string classPageLink, HttpClient httpClient)
         {
-            var httpClient = new HttpClient();
             var response = await httpClient.GetAsync(classPageLink);
 
             if (response.StatusCode != HttpStatusCode.OK)
