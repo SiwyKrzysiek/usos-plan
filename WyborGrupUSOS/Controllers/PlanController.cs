@@ -48,6 +48,11 @@ namespace WyborGrupUSOS.Controllers
             return View("DisplayPlan", plan);
         }
 
+        /// <summary>
+        /// Extract all classes from main view of Usos plan
+        /// </summary>
+        /// <param name="planPage">Default semester plan page</param>
+        /// <returns>List of classes</returns>
         private async Task<List<UniversityClass>> ExtractClasses(HtmlDocument planPage)
         {
             var classesLinks = planPage.DocumentNode.SelectNodes(@"//map").First().ChildNodes;
@@ -75,6 +80,33 @@ namespace WyborGrupUSOS.Controllers
             }
 
             return results;
+        }
+
+        /// <summary>
+        /// Loads single class from Usos class details page
+        /// </summary>
+        /// <param name="classPageLink">Link to class details</param>
+        /// <returns></returns>
+        private async Task<UniversityClass> ExtractSingeClass(string classPageLink)
+        {
+            var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(classPageLink);
+
+            if (response.StatusCode != HttpStatusCode.OK)
+                throw new IOException("Unable to open class link");
+
+            var stream = await response.Content.ReadAsStreamAsync();
+            var document = new HtmlDocument();
+            document.Load(stream);
+
+            var contentDiv = document.DocumentNode.SelectSingleNode(@"//div[@class='wrtext']");
+            var textNode = contentDiv.SelectSingleNode(@"h1");
+
+            var className = textNode.SelectSingleNode(@"a").InnerText;
+
+            var universityClass = new UniversityClass() {Name = className};
+
+            return universityClass;
         }
     }
 }
