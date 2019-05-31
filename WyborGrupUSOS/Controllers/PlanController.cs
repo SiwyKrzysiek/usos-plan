@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Policy;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using HtmlAgilityPack;
@@ -45,14 +47,7 @@ namespace WyborGrupUSOS.Controllers
             HtmlDocument doc = new HtmlDocument();
             doc.Load(stream);
 
-            ExtractClassesFromHtmlView(doc);
-            
-            var classes = ExtractClassesFromGifView(doc, httpClient);
-
-            HtmlNodeCollection classesLinks = doc.DocumentNode.SelectNodes(@"//map").First().ChildNodes;
-            plan.Dane = classesLinks;
-
-            plan.Classes = classes.ToList();
+            plan.Classes = ExtractClassesFromHtmlView(doc).ToList();
 
             return View("DisplayPlan", plan);
         }
@@ -65,7 +60,31 @@ namespace WyborGrupUSOS.Controllers
 
             var dataNodes = table.SelectNodes(@"//td").Where(IsClassData);
 
-            return null;
+            return from td in dataNodes select ExtractClassDataFromTableCell(td);
+        }
+
+        private UniversityClass ExtractClassDataFromTableCell(HtmlNode dt)
+        {
+            var classTypeMap = new Dictionary<string, UniversityClass.ClassType>()
+            {
+                {"KON", UniversityClass.ClassType.Seminar},
+                {"CW", UniversityClass.ClassType.Exercises},
+                {"WYK", UniversityClass.ClassType.Lecture}
+            };
+
+            var details = dt.SelectSingleNode(@"span[@class='note']").InnerText;
+
+            var pattern = @"(?<time>\d{1,2}:\d{2}-\d{1,2}:\d{2}), (?<type>\w*) .*(?<groupNumber>\d)";
+            var match = Regex.Match(details, pattern, RegexOptions.Compiled);
+
+            var time = match.Groups["time"].Value;
+            var type = match.Groups["type"].Value;
+            var groupNumber = match.Groups["groupNumber"].Value;
+
+            var title = dt.SelectSingleNode(@"div").InnerText;
+            var className = title.Substring(0, title.LastIndexOf('(')).Trim();
+
+            return new UniversityClass(className, classTypeMap[type], int.Parse(groupNumber));
         }
 
         private bool IsClassData(HtmlNode td)

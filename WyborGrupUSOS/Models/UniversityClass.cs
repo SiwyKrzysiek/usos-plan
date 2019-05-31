@@ -19,5 +19,26 @@ namespace WyborGrupUSOS.Models
             Seminar,
             Project
         }
+
+        public UniversityClass()
+        {
+        }
+
+        public UniversityClass(string name, ClassType type, int? groupNumber)
+        {
+            Name = name;
+            Type = type;
+            GroupNumber = IsSplitToGroups(type) ? groupNumber : null;
+        }
+
+        /// <summary>
+        /// Informs if given class type is single for whole year or divided to groups
+        /// </summary>
+        /// <param name="classType"></param>
+        /// <returns></returns>
+        public bool IsSplitToGroups(ClassType classType)
+        {
+            return !(classType == ClassType.Lecture || classType == ClassType.Seminar);
+        }
     }
 }
