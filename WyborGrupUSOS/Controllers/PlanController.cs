@@ -40,10 +40,10 @@ namespace WyborGrupUSOS.Controllers
             doc.Load(stream);
 
             HtmlNodeCollection classesLinks = doc.DocumentNode.SelectNodes(@"//map").First().ChildNodes;
-            var classes = await ExtractClasses(doc, httpClient);
+            var classes = ExtractClasses(doc, httpClient);
 
             plan.Dane = classesLinks;
-            plan.Classes = classes;
+            plan.Classes = classes.ToList();
 
             return View("DisplayPlan", plan);
         }
@@ -54,38 +54,22 @@ namespace WyborGrupUSOS.Controllers
         /// <param name="planPage">Default semester plan page</param>
         /// <param name="httpClient">Client used to download data</param>
         /// <returns>List of classes</returns>
-        private async Task<List<UniversityClass>> ExtractClasses(HtmlDocument planPage, HttpClient httpClient)
+        private IEnumerable<UniversityClass> ExtractClasses(HtmlDocument planPage, HttpClient httpClient)
         {
             var classesLinks = planPage.DocumentNode.SelectNodes(@"//map").First().ChildNodes;
+            
+            // Create list of tasks with a query
+            var tasks = from link in classesLinks select ExtractSingeClass(link.Attributes["href"].Value, httpClient);
+            Task.WaitAll(tasks.ToArray());
 
-            var results = new List<UniversityClass>(classesLinks.Count);
-            foreach (var link in classesLinks)
-            {
-                string url = link.Attributes["href"].Value;
-                var response = await httpClient.GetAsync(url);
-
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new IOException("Unable to open class link");
-
-                var stream = await response.Content.ReadAsStreamAsync();
-                var document = new HtmlDocument();
-                document.Load(stream);
-
-                var contentDiv = document.DocumentNode.SelectSingleNode(@"//div[@class='wrtext']");
-                var textNode = contentDiv.SelectSingleNode(@"h1");
-
-                var className = textNode.SelectSingleNode(@"a").InnerText;
-
-                results.Add(new UniversityClass() {Name = className});
-            }
-
-            return results;
+            return from t in tasks select t.Result;
         }
 
         /// <summary>
         /// Loads single class from Usos class details page
         /// </summary>
         /// <param name="classPageLink">Link to class details</param>
+        /// <param name="httpClient">Client used to download data</param>
         /// <returns></returns>
         private async Task<UniversityClass> ExtractSingeClass(string classPageLink, HttpClient httpClient)
         {
