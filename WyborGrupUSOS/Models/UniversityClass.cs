@@ -10,6 +10,8 @@ namespace WyborGrupUSOS.Models
         public string Name { get; set; }
         public ClassType Type { get; set; }
         public int? GroupNumber { get; set; }
+        public Time StartTime { get; set; }
+        public Time EndTime { get; set; }
 
         public enum ClassType
         {
@@ -24,7 +26,7 @@ namespace WyborGrupUSOS.Models
         {
         }
 
-        public UniversityClass(string name, ClassType type, int? groupNumber)
+        public UniversityClass(string name, ClassType type, int? groupNumber, Time start = null, Time end = null)
         {
             Name = name;
             Type = type;

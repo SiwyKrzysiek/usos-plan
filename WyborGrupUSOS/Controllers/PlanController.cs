@@ -81,10 +81,14 @@ namespace WyborGrupUSOS.Controllers
             var type = match.Groups["type"].Value;
             var groupNumber = match.Groups["groupNumber"].Value;
 
+            var timeParts = time.Split('-');
+            var startTime = new Time(timeParts[0]);
+            var endTime = new Time(timeParts[1]);
+
             var title = dt.SelectSingleNode(@"div").InnerText;
             var className = title.Substring(0, title.LastIndexOf('(')).Trim();
 
-            return new UniversityClass(className, classTypeMap[type], int.Parse(groupNumber));
+            return new UniversityClass(className, classTypeMap[type], int.Parse(groupNumber), startTime, endTime);
         }
 
         private bool IsClassData(HtmlNode td)
