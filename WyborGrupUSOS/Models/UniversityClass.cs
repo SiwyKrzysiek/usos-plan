@@ -41,8 +41,14 @@ namespace WyborGrupUSOS.Models
         /// <returns></returns>
         public bool IsSameClass(UniversityClass anotherClass)
         {
-            return this.Name == anotherClass.Name && this.Type == anotherClass.Type;
+            return GetSignature().Equals(anotherClass.GetSignature());
         }
+
+        /// <summary>
+        /// Gets distinguishing properties of class. From group of classes with the same signature student needs to attend only one.
+        /// </summary>
+        /// <returns></returns>
+        public Tuple<string, UniversityClass.ClassType> GetSignature() => new Tuple<string, ClassType>(Name, Type);
 
         /// <summary>
         /// Informs if given class type is single for whole year or divided to groups
