@@ -40,15 +40,15 @@ namespace WyborGrupUSOS.Controllers
             HttpClient httpClient = new HttpClient();
             HttpResponseMessage result = await httpClient.GetAsync(link);
 
-            Plan plan = new Plan { StatusCode = result.StatusCode.ToString()};
-
             Stream stream = await result.Content.ReadAsStreamAsync();
 
             HtmlDocument doc = new HtmlDocument();
             doc.Load(stream);
 
-            plan.Classes = ExtractClassesFromHtmlView(doc).ToList();
-
+            var classes = ExtractClassesFromHtmlView(doc).ToList();
+            var plan = new Plan(classes);
+            plan.StatusCode = result.StatusCode.ToString();
+            
             return View("DisplayPlan", plan);
         }
 
