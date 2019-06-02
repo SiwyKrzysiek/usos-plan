@@ -62,6 +62,25 @@ namespace WyborGrupUSOS.Controllers
             var daysRow = table.FirstChild;
             var daysColumnSizes = ExtractDaysColumnSizes(daysRow).ToList();
 
+            for (var i = 1; i < table.ChildNodes.Count; i++)
+            {
+                var tr = table.ChildNodes[i];
+                if (!tr.HasChildNodes) continue; //TODO: Maybe ignore when InnerText == ""
+
+                int columnCount = 0;
+                foreach (var td in tr.ChildNodes)
+                {
+                    if (td.Attributes["colspan"] != null)
+                    columnCount += Convert.ToInt32(td.Attributes["colspan"].Value);
+
+                    if (IsClassData(td))
+                    {
+                        //TODO: Get day
+                        var universityClass = ExtractClassDataFromTableCell(td);
+                    }
+                }
+            }
+
             var dataNodes = table.SelectNodes(@"//td").Where(IsClassData);
 
             return from td in dataNodes select ExtractClassDataFromTableCell(td);
@@ -86,7 +105,7 @@ namespace WyborGrupUSOS.Controllers
             }
         }
 
-        private UniversityClass ExtractClassDataFromTableCell(HtmlNode dt)
+        private UniversityClass ExtractClassDataFromTableCell(HtmlNode td)
         {
             var classTypeMap = new Dictionary<string, UniversityClass.ClassType>()
             {
@@ -95,7 +114,7 @@ namespace WyborGrupUSOS.Controllers
                 {"WYK", UniversityClass.ClassType.Lecture}
             };
 
-            var details = dt.SelectSingleNode(@"span[@class='note']").InnerText;
+            var details = td.SelectSingleNode(@"span[@class='note']").InnerText;
 
             var pattern = @"(?<time>\d{1,2}:\d{2}-\d{1,2}:\d{2}), (?<type>\w*) .*(?<groupNumber>\d)";
             var match = Regex.Match(details, pattern, RegexOptions.Compiled);
@@ -108,7 +127,7 @@ namespace WyborGrupUSOS.Controllers
             var startTime = new Time(timeParts[0]);
             var endTime = new Time(timeParts[1]);
 
-            var title = dt.SelectSingleNode(@"div").InnerText;
+            var title = td.SelectSingleNode(@"div").InnerText;
             var className = title.Substring(0, title.LastIndexOf('(')).Trim();
 
             return new UniversityClass(className, classTypeMap[type], int.Parse(groupNumber), startTime, endTime);
