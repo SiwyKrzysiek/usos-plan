@@ -58,9 +58,32 @@ namespace WyborGrupUSOS.Controllers
                 @"//div[@id='layout-c22a']/div[@class='wrtext']/div[@class='wrtext']/div[@class='wrtext']/div/table[@cellspacing='0' and @cellpadding='0']"
                 );
 
+            //TODO: Read table row by row and detect which day it is
+            var daysRow = table.FirstChild;
+            var daysColumnSizes = ExtractDaysColumnSizes(daysRow).ToList();
+
             var dataNodes = table.SelectNodes(@"//td").Where(IsClassData);
 
             return from td in dataNodes select ExtractClassDataFromTableCell(td);
+        }
+
+        /// <summary>
+        /// Each days column is fixed width. Knowing it will enable to parse day of the week of lectures
+        /// </summary>
+        /// <param name="daysRow"></param>
+        /// <returns></returns>
+        private IEnumerable<int> ExtractDaysColumnSizes(HtmlNode daysRow)
+        {
+            var children = daysRow.ChildNodes;
+            children.RemoveAt(0);
+
+            if (children.Count != 5)
+                throw new FormatException("Expected 5 days of the weak");
+
+            foreach (var th in children)
+            {
+                yield return Convert.ToInt32(th.Attributes["colspan"].Value);
+            }
         }
 
         private UniversityClass ExtractClassDataFromTableCell(HtmlNode dt)
