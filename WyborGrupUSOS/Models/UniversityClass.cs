@@ -30,7 +30,18 @@ namespace WyborGrupUSOS.Models
         {
             Name = name;
             Type = type;
-            GroupNumber = IsSplitToGroups(type) ? groupNumber : null;
+            GroupNumber = groupNumber;
+        }
+
+        /// <summary>
+        /// Determinate if another class is actually the same class but at different time.
+        /// If that's the case student needs to attend only one class from such group
+        /// </summary>
+        /// <param name="anotherClass"></param>
+        /// <returns></returns>
+        public bool IsSameClass(UniversityClass anotherClass)
+        {
+            return this.Name == anotherClass.Name && this.Type == anotherClass.Type;
         }
 
         /// <summary>
