@@ -31,6 +31,8 @@ namespace WyborGrupUSOS.Models
             Name = name;
             Type = type;
             GroupNumber = groupNumber;
+            StartTime = start;
+            EndTime = end;
         }
 
         /// <summary>
