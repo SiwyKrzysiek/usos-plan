@@ -20,6 +20,9 @@ namespace WyborGrupUSOS.Models
 
         public Plan(IEnumerable<UniversityClass> classes)
         {
+            Classes = classes.ToList();
+            ClassGroups = new Dictionary<Tuple<string, UniversityClass.ClassType>, List<UniversityClass>>();
+
             //TODO: Group classes with same type
             foreach (var universityClass in classes)
             {
