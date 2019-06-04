@@ -12,6 +12,7 @@ namespace WyborGrupUSOS.Models
         public int? GroupNumber { get; set; }
         public Time StartTime { get; set; }
         public Time EndTime { get; set; }
+        public DayOfWeek DayOfWeek { get; set; }
 
         public enum ClassType
         {
