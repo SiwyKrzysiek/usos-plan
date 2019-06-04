@@ -62,7 +62,7 @@ namespace WyborGrupUSOS.Models
 
         public override string ToString()
         {
-            return $"{_hour}:{_minute:2D}";
+            return $"{_hour}:{_minute:D2}";
         }
     }
 }
