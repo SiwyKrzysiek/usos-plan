@@ -75,15 +75,12 @@ namespace WyborGrupUSOS.Controllers
 
                     if (IsClassData(td))
                     {
-                        //TODO: Get day
                         var universityClass = ExtractClassDataFromTableCell(td);
+                        universityClass.DayOfWeek = DetectDayFromColumnCount(daysColumnSizes, columnCount);
+                        yield return universityClass;
                     }
                 }
             }
-
-            var dataNodes = table.SelectNodes(@"//td").Where(IsClassData);
-
-            return from td in dataNodes select ExtractClassDataFromTableCell(td);
         }
 
         private DayOfWeek DetectDayFromColumnCount(IEnumerable<int> daysColumnSizes, int currentColumnCount)
