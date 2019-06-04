@@ -86,6 +86,21 @@ namespace WyborGrupUSOS.Controllers
             return from td in dataNodes select ExtractClassDataFromTableCell(td);
         }
 
+        private DayOfWeek DetectDayFromColumnCount(IEnumerable<int> daysColumnSizes, int currentColumnCount)
+        {
+            int sum = 0, i = 1;
+            foreach (var daysColumnSize in daysColumnSizes)
+            {
+                sum += daysColumnSize;
+                if (currentColumnCount <= sum)
+                    return (DayOfWeek) i;
+
+                i++;
+            }
+
+            return DayOfWeek.Monday;
+        }
+
         /// <summary>
         /// Each days column is fixed width. Knowing it will enable to parse day of the week of lectures
         /// </summary>
