@@ -109,7 +109,7 @@ namespace WyborGrupUSOS.Controllers
             children.RemoveAt(0);
 
             if (children.Count != 5)
-                throw new FormatException("Expected 5 days of the weak");
+                throw new FormatException("Expected 5 days of the week");
 
             foreach (var th in children)
             {
