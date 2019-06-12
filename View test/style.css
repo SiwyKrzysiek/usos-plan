@@ -1,0 +1,53 @@
+#frame {
+    margin-top: 6rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    
+    /* margin: 50px, auto */
+}
+
+#display {
+    background-color: chartreuse;
+    width: 100%;
+    height: 500px;
+    margin: auto;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black;
+    /* margin-top: 100px;
+  margin-bottom: 100px;
+  margin-right: 150px;
+  margin-left: 80px; */
+}
+
+#planTable th {
+    width: calc(100% / 5);
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: #4CAF50;
+    color: white;
+}
+
+#planTable tr {
+    height: 50%;
+}
+
+#planTable td {
+    width: calc(100% / 5);
+    height: 50px;
+    background-color: blueviolet;
+    /* border-color: black; */
+    border: 2px dashed black;
+}
+
+.spot {
+    height: 30%;
+}
+
+#planTable {
+    background-color: bisque;
+    border-collapse: collapse;
+    width: 100%
+}
