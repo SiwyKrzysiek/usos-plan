@@ -1,7 +1,7 @@
 window.onload = function () {
 
     let target = document.getElementById("display");
-    dsiplayTable(target, 6);
+    //dsiplayTable(target, 6);
 }
 
 function dsiplayTable(div, rowCount) {

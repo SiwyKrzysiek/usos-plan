@@ -9,6 +9,7 @@
         "git-commit",
         "plaintext",
         "shellscript",
-        "javascript"
+        "javascript",
+        "html"
     ]
 }
