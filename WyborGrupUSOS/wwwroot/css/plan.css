@@ -83,3 +83,12 @@
 .conflict {
     background-color: red;
 }
+
+select {
+    margin-bottom: 4px;
+}
+
+.form-group label {
+    padding-top: 4px;
+    text-align: right;
+}
