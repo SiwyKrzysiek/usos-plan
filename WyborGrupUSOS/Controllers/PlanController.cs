@@ -34,7 +34,7 @@ namespace WyborGrupUSOS.Controllers
                 return View("Index", model);
             }
 
-            bool fakeInputFromFile = true;
+            bool fakeInputFromFile = false;
             HttpResponseMessage result;
             Stream stream;
 
