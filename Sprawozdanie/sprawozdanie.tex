@@ -49,20 +49,122 @@
 Celem projektu jest napisanie aplikacji webowej pozwalającej na planowanie semestru studentom korzystającym z systemu \textit{USOS}.
 W tym celu został wykonany program w języku C\# w oparciu o framework \textit{ASP.net MVC}. Dzięki temu możliwe było łatwe wydzielenie warstw widoku, modelu i kontrolerów.
 
-Aplikacja została opublikowana w Internecie z wykorzystaniem chmury \textit{Microsoft Azure}.
+Aplikacja została opublikowana w Internecie z wykorzystaniem chmury \textit{Microsoft Azure} co jest dokładniej opisanie w punkcie \ref{sec:chmura}.
 
 \subsection{Wzorzec MVC}
+Aby wprowadzić spójność wśród klas aplikacji, wyznaczyć zakres funkcji realizowany przez dany element oraz sprecyzować zasady komunikacji architektura
+projektu będzie bazować na wzorcu Model View Controller.
+Wyraźny podział elementów zaproponowany przez ten wzorzec będzie bezpośrednio realizowany przez podział klas na odpowiadające przestrzenie nazw.
+
+Klasy z przestrzeni Models reprezentują automaty zajęcia uczelniane, plan zajęć oraz fragmenty przetwarzanego dokumentu.
+
+Klasy z przestrzeni Views są odpowiedzialne za wygląd i wyświetlanie interfejsu programu. Składają się na nie pliki \texttt{.schtml}, które są przetwarzane dynamicznie do plików \texttt{.html} zwracanych do przeglądarki.
+
+Klasy z przestrzeni Controllers wykonują walidacje po stronie serwera. Kontrolują również przejście do kolejnych części aplikacji poprzez przekierowania oraz zwracanie widow.
+
+\section{Opis problemu}
+Celem aplikacji jest pomoc w rozwiązaniu realnego problemu jakim jest wybór odpowiednich grup na zajęcia akademickie przez studentów korzystających z systemu \textit{USOS}.
+
+Na wielu uczelniach nie ma podziału na grupy dziekańskie, dla których jest odgórnie układany plan. Zamiast tego student jest odpowiedzialny za własnoręczne skonfigurowanie planu na przyszłe semestry. 
+
+Wygląd przykładowego planu dla kierunku Geografia prowadzonego na Uniwersytecie Warszawskim jest przedstawiony na rysunku \ref{fig:przykladowyPlan}.
+
+Łatwo zauważyć, że tak przedstawiony plan może być przytłaczający i nieczytelny. Z tego powodu mój projekt pozwala na wczytanie planu po podaniu linku oraz wyświetla plan gdzie widoczne są jednocześnie jedynie zajęcia z wybranych grup.
+
+Dzięki temu student może przeprowadzić wizualizację różnych odpowiadających mu konfiguracji planu. Dodatkowo zajęcia różnych typów są zaznaczone innymi kolorami co daje dodatkowe informacje wizualne.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=13cm]{Example_plan}
+    \caption{Modele}
+    \label{fig:przykladowyPlan}
+\end{figure}
+
 
 \newpage{}
 \section{Projekt klas}
+Projekt klas reprezentujący model planu jest przedstawia diagram klas zawarty na figurze \ref{fig:klasy}.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=13cm]{klasy.pdf}
     \caption{Modele}
-    \label{}
+    \label{fig:klasy}
 \end{figure}
 
 \section{Prezentacja działania}
+Po przejściu na witrynę główną aplikacji użytkownik zobaczy ekran główny opisujący po krótce aplikację oraz pozwalający na przejście do ekranu wczytania planu. Ekran ten jest widoczny na figurze \ref{fig:ekranStartowy}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=13cm]{Ekran_startowy}
+    \caption{Ekran startowy}
+    \label{fig:ekranStartowy}
+\end{figure}
+
+Po przejściu dalej zostanie wyświetlony ekran pozwalający na przekazanie aplikacji linku do planu. Ekran zawiera też rozwijaną część opisjącą dokładniej szczegóły działania oraz wskazujący przykładowy plan. Możliwe jest wczytanie wskazanego planu lub plany przykładowego. Ekran ten przedstawiają figury \ref{fig:ekranWczytaniaZwiniety} i \ref{fig:ekranWczytaniaRozwiniety}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=13cm]{Ekran_wczytania_zwiniety}
+    \caption{Ekran wczytania bez dodatkowych informacji}
+    \label{fig:ekranWczytaniaZwiniety}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=13cm]{Ekran_wczytania_rozwiniety.png}
+    \caption{Ekran wczytania z dodatkowymi informacjami}
+    \label{fig:ekranWczytaniaRozwiniety}
+\end{figure}
+
+Po wczytaniu planu użytkownik zostanie przekierowany na ekran widoku planu. W górnej jego części znajduje się podgląd aktualnej konfiguracji plan. Na dole wyświetlane są kontrolki pozwalające na zmianę grupy. Przedmioty wyświetlane na planie są pokolorowane zgodnie z ich kategorią.
+
+\begin{itemize}
+    \item żółty -- ćwiczenia,
+    \item niebieski -- wykład,
+    \item różowy -- konwersatorium,
+    \item czerwony -- \textbf{konflikt}.
+\end{itemize}
+
+Listy wyboru grup zawierają wartości wczytanie z planu. W sytuacji gdy więcej niż jedno zajęcie jest ustawione na wybraną godzinę pole zmieni dynamicznie kolor na czerwony.
+
+Ekran ten przedstawia figura numer \ref{fig:ekranPlanu1}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=13cm]{Wczytany_plan1.png}
+    \caption{Ekran wczytania z dodatkowymi informacjami}
+    \label{fig:ekranPlanu1}
+\end{figure}
+
+
+\section{Publikacja w chmurze} \label{sec:chmura}
+W celu udostępnienie aplikacji w Internecie skonfigurowałem infrastrukturę w chmurze \textit{Microsoft Azure}.
+
+\subsection{Podjęte kroki}
+\begin{enumerate}
+\item Założyłem subskrypcję studencką przy pomocy konta uczelnianego.
+\item Utworzyłem grupę zasobów, powiązaną z subskrypcją, pozwalającą na łączne zarządzanie serwisami.
+\item Skonfigurowałem \textit{App Service plan} tak by aplikacja była dostępna 24 godziny na dobę.
+\item Utworzyłem \textit{App Service} pozwalający na przekazanie aplikacji webowej do chmury.
+\item Wgrałem kod aplikacji do chmury przy pomocy środowiska \textit{Visual Studio}.
+\end{enumerate}
+
+Utworzona grupa zasobów jest pokazana na figurze \ref{fig:resourceGroup}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=13cm]{resource_group.png}
+    \caption{Grupa zasobów na Azure}
+    \label{fig:resourceGroup}
+\end{figure}
+
+\section{Szczegóły techniczne}
+
+\subsection{Schemat działania}
+
+\subsection{Walidacja danych}
 
 \section{Opis użytych bibliotek}
 linq
@@ -70,6 +172,8 @@ C\# JSON
 jquery
 knockout
 bootstrap
+
+\section{Możliwości rozwoju}
 
 \end{document}
 
