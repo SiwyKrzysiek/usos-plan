@@ -25,6 +25,7 @@ namespace WyborGrupUSOS.Models
         /// Groups that have more than one member
         /// </summary>
         public List<ClassGroup> ClassGroups { get; private set; }
+        public HashSet<Time> StartingTimes { get; private set; }
 
         public Plan(IEnumerable<UniversityClass> classes)
         {
@@ -71,6 +72,13 @@ namespace WyborGrupUSOS.Models
                     ClassGroups.Add(new ClassGroup(name, type, group.Value));
                 }
             }
+
+            LoadStartingTimes(_classes);
+        }
+
+        private void LoadStartingTimes(IEnumerable<UniversityClass> classes)
+        {
+            StartingTimes = new HashSet<Time>(classes.Select(c => c.StartTime));
         }
     }
 }

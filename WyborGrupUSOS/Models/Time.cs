@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WyborGrupUSOS.Models
 {
-    public class Time
+    public class Time : IEquatable<Time>
     {
         private int _hour;
         private int _minute;
@@ -63,6 +63,29 @@ namespace WyborGrupUSOS.Models
         public override string ToString()
         {
             return $"{_hour}:{_minute:D2}";
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (_hour * 100) + _minute;
+            }
+        }
+
+        public bool Equals(Time other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return _hour == other._hour && _minute == other._minute;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Time) obj);
         }
     }
 }
