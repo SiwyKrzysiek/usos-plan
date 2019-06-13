@@ -3,38 +3,20 @@
     ViewData["Title"] = "Poprany plan";
 }
 
-
-@*<h2>Linki do przedmiotów:</h2>*@
-
-@*@foreach (var item in Model.Dane)
-    {
-        <p>
-            <a href="@item.Attributes["href"].Value">@item.Attributes["href"].Value</a>
-        </p>
-    }*@
-
-@*<h2>Lista przedmiotów:</h2>
-    @foreach (var universityClass in Model.Classes)
-    {
-        <p>@universityClass.Name</p>
-    }*@
-
 <h2>Wczytano następujące grupy zajęć</h2>
-@foreach (var classGroup in Model.ClassGroups.Keys)
+@foreach (var classGroup in Model.ClassGroups)
 {
-    <h3>@classGroup.Item1 @classGroup.Item2</h3>
-    foreach (var universityClass in Model.ClassGroups[classGroup])
+    <h3>@classGroup.Name @classGroup.Type</h3>
+    foreach (var universityClass in classGroup)
     {
         <p>@universityClass.Name @universityClass.Type @universityClass.GroupNumber @universityClass.DayOfWeek @universityClass.StartTime</p>
     }
 }
-
 @section scripts {
-
-        <script>
+    <script>
 
             var model = JSON.parse('@Json.Serialize(Model)');
-            alert(model.classes)
+            alert(model.classes);
 
             var ViewModel = function(first, last) {
             this.firstName = ko.observable(first);
@@ -46,7 +28,5 @@
             }, this);
             };
 
-        </script>
-
+    </script>
 }
-

@@ -11,8 +11,9 @@ namespace WyborGrupUSOS.Models
         public string StatusCode { get; set; }
         public HtmlNodeCollection Dane { get; set; }
         public List<UniversityClass> Classes { get; set; }
+        public List<ClassGroup> ClassGroups { get; set; }
 
-        public Dictionary<Tuple<string, UniversityClass.ClassType>, List<UniversityClass>> ClassGroups { get; set; }
+        //public Dictionary<Tuple<string, UniversityClass.ClassType>, List<UniversityClass>> ClassGroupsDictionary { get; set; }
 
         public Plan()
         {
@@ -21,22 +22,23 @@ namespace WyborGrupUSOS.Models
         public Plan(IEnumerable<UniversityClass> classes)
         {
             Classes = classes.ToList();
-            ClassGroups = new Dictionary<Tuple<string, UniversityClass.ClassType>, List<UniversityClass>>();
+            var classGroupsDictionary = new Dictionary<Tuple<string, UniversityClass.ClassType>, List<UniversityClass>>();
 
-            //TODO: Group classes with same type
-            foreach (var universityClass in classes)
+            foreach (var universityClass in Classes)
             {
                 var signature = universityClass.GetSignature();
 
-                if (!ClassGroups.ContainsKey(signature))
+                if (!classGroupsDictionary.ContainsKey(signature))
                 {
-                    ClassGroups.Add(signature, new List<UniversityClass>{universityClass});
+                    classGroupsDictionary.Add(signature, new List<UniversityClass>{universityClass});
                 }
                 else
                 {
-                    ClassGroups[signature].Add(universityClass);
+                    classGroupsDictionary[signature].Add(universityClass);
                 }
             }
+
+            ClassGroups = (from g in classGroupsDictionary select new ClassGroup(g.Key.Item1, g.Key.Item2, g.Value)).ToList();
         }
     }
 }
