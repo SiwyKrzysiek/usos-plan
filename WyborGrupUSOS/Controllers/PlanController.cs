@@ -61,8 +61,27 @@ namespace WyborGrupUSOS.Controllers
 
             var classes = ExtractClassesFromHtmlView(doc).ToList();
             var plan = new Plan(classes);
-            //plan.StatusCode = !fakeInputFromFile ? result.StatusCode.ToString() : "200";
             
+            return View("DisplayPlan", plan);
+        }
+
+        public async Task<IActionResult> LoadExamplePlan()
+        {
+            HttpResponseMessage result;
+            Stream stream;
+            var link = "https://usosweb.uw.edu.pl/kontroler.php?_action=katalog2/przedmioty/pokazPlanGrupyPrzedmiotow&grupa_kod=1900-1GF21&cdyd_kod=2019Z&plan_showSettings=1&plan_showStartTime=1&plan_showEndTime=1&plan_showTypeShort=1&plan_showTypeFull=0&plan_showGroupNumber=1&plan_showCourseName=1&plan_showCourseCode=0&plan_showRoom=1&plan_showBuildingCode=1&plan_showLecturers=1&plan_overridePrintWidth=1&plan_format=html&plan_colorScheme=default";
+
+            HttpClient httpClient = new HttpClient();
+            result = await httpClient.GetAsync(link);
+            stream = await result.Content.ReadAsStreamAsync();
+
+            HtmlDocument doc = new HtmlDocument();
+            doc.Load(stream);
+            stream.Close();
+
+            var classes = ExtractClassesFromHtmlView(doc).ToList();
+            var plan = new Plan(classes);
+
             return View("DisplayPlan", plan);
         }
 

@@ -11,7 +11,6 @@
 <div class="row">
     <div class="col-sm-12">
         <h2>Wczytanie planu semestralnego z USOSa</h2>
-
         <h3>Wklej poniżej link do swojego planu</h3>
         @using (Html.BeginForm("LoadPlan", "Plan"))
         {
@@ -26,6 +25,8 @@
             <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#additionalInfo" aria-expanded="false" aria-controls="additionalInfo">
                 <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
             </button>
+
+            <button id="submit" type="submit" asp-action="LoadExamplePlan" class="btn btn-success" style="margin-right: 1%; float: right; margin-right: 0">Otwórz przykładowy plan</button>
         }
     </div>
 
