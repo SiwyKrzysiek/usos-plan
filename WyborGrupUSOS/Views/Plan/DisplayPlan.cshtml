@@ -4,25 +4,25 @@
 }
 
 @section Head
-{
+    {
     <link rel="stylesheet" href="~/css/plan.css" />
 }
 
 @*<h2>Wczytano pojedyńcze zajęcia:</h2>
-@foreach (var universityClass in Model.SingularClasses)
-{
-    <p>@universityClass.Name @universityClass.Type @universityClass.GroupNumber @universityClass.DayOfWeek @universityClass.StartTime</p>
-}
-
-<h2>Wczytano następujące grupy zajęć</h2>
-@foreach (var classGroup in Model.ClassGroups)
-{
-    <h3>@classGroup.Name @classGroup.Type</h3>
-    foreach (var universityClass in classGroup)
+    @foreach (var universityClass in Model.SingularClasses)
     {
         <p>@universityClass.Name @universityClass.Type @universityClass.GroupNumber @universityClass.DayOfWeek @universityClass.StartTime</p>
     }
-}*@
+
+    <h2>Wczytano następujące grupy zajęć</h2>
+    @foreach (var classGroup in Model.ClassGroups)
+    {
+        <h3>@classGroup.Name @classGroup.Type</h3>
+        foreach (var universityClass in classGroup)
+        {
+            <p>@universityClass.Name @universityClass.Type @universityClass.GroupNumber @universityClass.DayOfWeek @universityClass.StartTime</p>
+        }
+    }*@
 
 <div class="row">
     <div class="col-sm-12">
@@ -66,65 +66,93 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min.js"></script>
     <script>
 
-            var model = JSON.parse('@Json.Serialize(Model)');
-            //alert(model.classes);
+        //alert(model.classes);
 
-            var ViewModel = function(first, last) {
-                this.firstName = ko.observable(first);
-                this.lastName = ko.observable(last);
-            };
-        
+        var ViewModel = function(first, last) {
+            this.firstName = ko.observable(first);
+            this.lastName = ko.observable(last);
+        };
 
-            window.onload = function () {
-                let target = document.getElementById("display");
-                dsiplayTable(target, 6);
+        let model;
+        let times;
 
-                let model = new ViewModel("Jan", "Kowalski");
-                ko.applyBindings(model);
+        window.onload = function () {
+            model = JSON.parse('@Json.Serialize(Model)');
+            let target = document.getElementById("display");
+            dsiplayTable(target, model.startingTimes.length);
+
+            times = model.startingTimes;
+            addTimeStamps(model);
+
+            //let viewModel = new ViewModel("Jan", "Kowalski");
+            //ko.applyBindings(viewModel);
+        }
+
+        function addTimeStamps(model) {
+            for (let universityClass of model.singularClasses) {
+                universityClass.startIndex = calculatePositionInDay(universityClass, model.startingTimes);
             }
 
-            function dsiplayTable(div, rowCount) {
-                let tableHeaders = ["Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek"]
-                let width = tableHeaders.length;
-
-                let table = document.createElement("table");
-                table.classList.add("planTable");
-
-                table.appendChild(createHeader(tableHeaders));
-                for (let i = 0; i < rowCount; i++) {
-                    table.appendChild(crateRow(width))
+            for (let group of model.classGroups)
+                for (let universityClass of group) {
+                    universityClass.startIndex = calculatePositionInDay(universityClass, model.startingTimes);
                 }
+        }
 
+        function calculatePositionInDay(universityClass, startingTimes) {
+            for (let i = 0; i < startingTimes.length; i++) {
+                let time = startingTimes[i];
+                if (areTimesTheSame(universityClass.startTime, time))
+                    return i;
+            }
+        }
 
-                div.appendChild(table);
+        function areTimesTheSame(time1, time2) {
+            return time1.hour === time2.hour && time1.minute === time2.minute;
+        }
+
+        function dsiplayTable(div, rowCount) {
+            let tableHeaders = ["Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek"]
+            let width = tableHeaders.length;
+
+            let table = document.createElement("table");
+            table.classList.add("planTable");
+
+            table.appendChild(createHeader(tableHeaders));
+            for (let i = 0; i < rowCount; i++) {
+                table.appendChild(crateRow(width))
             }
 
-            function createHeader(headers) {
-                let tr = document.createElement("tr");
 
-                for (const header of headers) {
-                    let text = document.createTextNode(header);
-                    let th = document.createElement("th");
-                    th.appendChild(text);
+            div.appendChild(table);
+        }
 
-                    tr.appendChild(th);
-                }
+        function createHeader(headers) {
+            let tr = document.createElement("tr");
 
-                return tr;
+            for (const header of headers) {
+                let text = document.createTextNode(header);
+                let th = document.createElement("th");
+                th.appendChild(text);
+
+                tr.appendChild(th);
             }
 
-            function crateRow(width) {
-                let tr = document.createElement("tr");
+            return tr;
+        }
 
-                for (let i = 0; i < width; i++) {
-                    let td = document.createElement("td");
-                    td.classList.add("empty");
+        function crateRow(width) {
+            let tr = document.createElement("tr");
 
-                    tr.appendChild(td);
-                }
+            for (let i = 0; i < width; i++) {
+                let td = document.createElement("td");
+                td.classList.add("empty");
 
-                return tr;
+                tr.appendChild(td);
             }
+
+            return tr;
+        }
 
     </script>
 }
