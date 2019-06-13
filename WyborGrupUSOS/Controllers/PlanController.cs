@@ -57,6 +57,7 @@ namespace WyborGrupUSOS.Controllers
 
             HtmlDocument doc = new HtmlDocument();
             doc.Load(stream);
+            stream.Close();
 
             var classes = ExtractClassesFromHtmlView(doc).ToList();
             var plan = new Plan(classes);
