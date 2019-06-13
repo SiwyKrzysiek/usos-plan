@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Policy;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
@@ -33,23 +34,45 @@ namespace WyborGrupUSOS.Controllers
                 return View("Index", model);
             }
 
-            var queryString = HttpUtility.ParseQueryString(model.Link);
-            queryString.Set("plan_format", "html");
-            var link = queryString.ToString();
+            bool fakeInputFromFile = true;
+            HttpResponseMessage result;
+            Stream stream;
 
-            HttpClient httpClient = new HttpClient();
-            HttpResponseMessage result = await httpClient.GetAsync(link);
+            if (!fakeInputFromFile)
+            {
+                var queryString = HttpUtility.ParseQueryString(model.Link);
+                queryString.Set("plan_format", "html");
+                var link = queryString.ToString();
 
-            Stream stream = await result.Content.ReadAsStreamAsync();
+                HttpClient httpClient = new HttpClient();
+                result = await httpClient.GetAsync(link);
+
+                stream = await result.Content.ReadAsStreamAsync();
+            }
+            else
+            {
+                stream = System.IO.File.Open("kopia.html", FileMode.Open);
+            }
+            
 
             HtmlDocument doc = new HtmlDocument();
             doc.Load(stream);
 
             var classes = ExtractClassesFromHtmlView(doc).ToList();
             var plan = new Plan(classes);
-            plan.StatusCode = result.StatusCode.ToString();
+            //plan.StatusCode = !fakeInputFromFile ? result.StatusCode.ToString() : "200";
             
             return View("DisplayPlan", plan);
+        }
+
+        private static Stream GenerateStreamFromString(string s)
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
         }
 
         private IEnumerable<UniversityClass> ExtractClassesFromHtmlView(HtmlDocument planPage)
