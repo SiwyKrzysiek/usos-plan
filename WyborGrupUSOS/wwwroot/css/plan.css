@@ -70,14 +70,22 @@
     /* align-items: center; */
 }
 
-    .class p {
-        margin: 0;
-        padding: 0;
-        text-align: center;
-    }
+.class p {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.lecture {
+    background-color: #a8c9ff;
+}
 
 .exercise {
-    background-color: yellow;
+    background-color: #f7ffa5;
+}
+
+.seminar {
+    background-color: #eda8ff;
 }
 
 .conflict {

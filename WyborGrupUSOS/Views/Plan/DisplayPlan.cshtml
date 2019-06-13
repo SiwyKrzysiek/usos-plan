@@ -75,11 +75,12 @@
 
         let model;
         let times;
+        let table;
 
         window.onload = function () {
             model = JSON.parse('@Json.Serialize(Model)');
             let target = document.getElementById("display");
-            dsiplayTable(target, model.startingTimes.length);
+            table = dsiplayTable(target, model.startingTimes.length);
 
             times = model.startingTimes;
             addTimeStamps(model);
@@ -93,10 +94,64 @@
                 universityClass.startIndex = calculatePositionInDay(universityClass, model.startingTimes);
             }
 
-            for (let group of model.classGroups)
+            for (let group of model.classGroups) {
+                group.selected = 1;
                 for (let universityClass of group) {
                     universityClass.startIndex = calculatePositionInDay(universityClass, model.startingTimes);
                 }
+            }
+
+        }
+
+        function displayClass(universityClass) {
+            let row = universityClass.startIndex;
+            let column = universityClass.dayOfWeek - 1;
+
+            let tr = table.childNodes[row + 1];
+            let td = tr.childNodes[column];
+            let spot = td.firstChild;
+            spot.classList.value = ["spot"];
+
+            spot.appendChild(createClassDiv(universityClass));
+            if (spot.childNodes.length > 1) {
+                spot.classList.add("conflict");
+            } else {
+                spot.classList.add(getStyleForClassType(universityClass.type));
+            }
+                
+        }
+
+        function getStyleForClassType(classType) {
+            switch (classType) {
+                default:
+                case 0:
+                    return "lecture";
+                case 1:
+                    return "exercises";
+                case 2:
+                    return "laboratories";
+                case 3:
+                    return "seminar";
+                case 4:
+                    return "project";
+            }
+        }
+
+        function createClassDiv(universityClass) {
+            let div = document.createElement("div");
+            div.classList.add("class");
+
+            let p = document.createElement("p");
+            p.classList.add("className");
+            p.appendChild(document.createTextNode(universityClass.name));
+            div.appendChild(p);
+
+            p = document.createElement("p");
+            p.classList.add("className");
+            p.appendChild(document.createTextNode("gr. " + universityClass.groupNumber));
+            div.appendChild(p);
+
+            return div;
         }
 
         function calculatePositionInDay(universityClass, startingTimes) {
@@ -120,11 +175,11 @@
 
             table.appendChild(createHeader(tableHeaders));
             for (let i = 0; i < rowCount; i++) {
-                table.appendChild(crateRow(width))
+                table.appendChild(crateRow(width));
             }
 
-
             div.appendChild(table);
+            return table;
         }
 
         function createHeader(headers) {
@@ -146,7 +201,11 @@
 
             for (let i = 0; i < width; i++) {
                 let td = document.createElement("td");
-                td.classList.add("empty");
+                let div = document.createElement("div");
+                div.classList.add("spot");
+                div.classList.add("empty");
+
+                td.appendChild(div);
 
                 tr.appendChild(td);
             }
