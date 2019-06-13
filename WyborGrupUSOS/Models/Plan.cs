@@ -69,6 +69,7 @@ namespace WyborGrupUSOS.Models
                 {
                     var name = group.Value.First().Name;
                     var type = group.Value.First().Type;
+                    group.Value.Sort((x, y) => (int) (x.GroupNumber - y.GroupNumber) );
                     ClassGroups.Add(new ClassGroup(name, type, group.Value));
                 }
             }

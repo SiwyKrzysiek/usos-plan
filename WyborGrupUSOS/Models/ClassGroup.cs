@@ -11,7 +11,7 @@ namespace WyborGrupUSOS.Models
     /// Groups classes with the same kind but at different times.
     /// Student hast to pick only one of them
     /// </summary>
-    public class ClassGroup : IEnumerable<UniversityClass>
+    public class ClassGroup
     {
         public string Name { get; set; }
         public UniversityClass.ClassType Type { get; set; }
@@ -23,16 +23,6 @@ namespace WyborGrupUSOS.Models
             Type = type;
 
             Classes = classes;
-        }
-
-        public IEnumerator<UniversityClass> GetEnumerator()
-        {
-            return Classes.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
     }
 }
