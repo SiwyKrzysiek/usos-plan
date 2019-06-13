@@ -140,7 +140,7 @@ Ekran ten przedstawia figura numer \ref{fig:ekranPlanu1}.
 
 
 \section{Publikacja w chmurze} \label{sec:chmura}
-W celu udostępnienie aplikacji w Internecie skonfigurowałem infrastrukturę w chmurze \textit{Microsoft Azure}.
+W celu udostępnienie aplikacji w Internecie skonfigurowałem infrastrukturę w chmurze \textit{Microsoft Azure}. Dzięki temu aplikacja jest dostępna pod adresem \hyperlink{http://usos-plan.azurewebsites.net}{usos-plan.azurewebsites.net}.
 
 \subsection{Podjęte kroki}
 \begin{enumerate}
@@ -163,17 +163,61 @@ Utworzona grupa zasobów jest pokazana na figurze \ref{fig:resourceGroup}
 \section{Szczegóły techniczne}
 
 \subsection{Schemat działania}
+Po wczytaniu linka wprowadzonego przez użytkownika modyfikowana jest część query string tak by otrzymać od serwisu \textit{USOS} cały plan w jednym pliku. Dzięki temu nie trzeba pobierać wielu stron opisjących szczegóły każdego z przedmiotów.
+
+Następnie z odpowiedzi od serwera wyodrębniana jest tabela zawierająca plan. Jest ona parsowana wiersz po wierszu by określić informacje takie jak dzień, w którym organizowane są określone zajęcia. 
+
+Po zakończeniu prasowania odpowiedzi serwera tworzony jest model planu zajęć. Na tym etapie wydzielane są grupy zajęć stanowiących wybór oraz zajęcia, na które student musi chodzić i nie ma żadnego wyboru.
+
+Po utworzeniu modelu przekazywany jest on do widoku gdzie zgodnie ze wzorcem MVVM tworzony jest model widoku uwzględniający elementy takie jak aktualnie wygrane zajęcia dla każdej grupy.
+
+Następnie model jest rysowany w postaci tabeli. W reakcji na zmianę grupy przez użytkownika model i wyświetlany widok są aktualizowane.
 
 \subsection{Walidacja danych}
+Lik wprowadzany przez użytkownika jest walidowany po stronie serwera. W tym celu zostały zastosowane adnotacje z przestrzeni nazw \texttt{System.ComponentModel.DataAnnotations}.
 
-\section{Opis użytych bibliotek}
-linq
-C\# JSON
-jquery
-knockout
-bootstrap
+Sprawdzane jest czy wartość została wprowadzona adnotacją \texttt{Required} oraz poprawność linku adnotacją \texttt{RegularExpression}. Dzięki zastosowaniu tego rozwiązania mogą być automatycznie generowane odpowiednie komunikaty o błędach.
+
+\subsection{Zastosowane mechanizmy}
+Podczas pisania projektu poznałem wiele mechanizmów, które starałem się zastosować w projekcie.
+
+\paragraphnl{linq}
+Zastosowałem bibliotekę \texttt{linq} rozszerzającą metody kolekcji w celu filtrowania danych, mapowania oraz wybierania odpowiednich elementów ze zbirów.
+Stosowałem za równo składnię \textbf{metod} jak i \textbf{zapytań}.
+
+\paragraphnl{async}
+Dzięki zastosowaniu programowania współbieżnego mogłem zwolnić aktualnie czekający wątek maszyny podczas wczytywania danych z zewnętrznych źródeł oraz zrównoleglić wykonywanie pracy.
+
+\paragraphnl{Json.NET}
+Przy pomocy tej biblioteki firmy \textit{Newtonsoft} mogłem z łatwością prasować i serializować obiekty do formatu JSON. Było to szczególnie przydatne przy konwersji modelu C\# na modle w języku JavaScript.
+
+\paragraphnl{XPath}
+Ponieważ dokument html jest poniekąd dokumentem xml to mogłem zastosować składnię XPath do wybierania odpowiednich elementów podczas przetwarzania odpowiedzi od serwisu \textit{USOS}.
+
+\paragraphnl{Animacje CSS}
+By nadać płynność elementowi ładowania pojawiającemu się podczas ładowania strony zastosowałem animacje opisywanie przez język CSS.
+Opisują one w wektorowy sposób jakie transformacje mają zostać wykonane na obiekcie.
+
+\paragraphnl{Wiązania danych}
+Dzięki wiązaniom danych z biblioteki \textit{Knockout.js} można powiązać widok z modelem widoku realizując wzorzec MVVM. Pozwala to na dynamiczną aktualizację powiązanych wartości oraz na łatwe stosowanie wzorca Obserwator.
 
 \section{Możliwości rozwoju}
+W przyszłości do programu możnaby oddać następujące funkcjonalności.
+
+\paragraphnl{Zapis stanu}
+Do widoku planu można dodać przycisk pozwalający na zachowanie aktualnego ustawienia planu zajęć. W tym celu należałoby zapisać model widoku w bazie na serwerze. Aby to osiągnąć można zastosować blob storage z platformy \textit{Azure}.
+
+\paragraphnl{Autmatyczne dopasowawnie konfiguracji planu}
+Przydatny dla użytkownika mógłby okazać się algorytm, który automatycznie wybierałby grupy zajęć tak by osiągnąć wskazany przez użytkownika cel. Na przykład minimalizację okienek czy dopasowanie planu do grafiku pracy.
+
+\paragraphnl{Wstawianie własnych zajęć}
+Możliwość by użytkownik mógł dodawać własne dodatkowe zajęcia do wczytanego planu.
+
+\paragraphnl{Usuwanie przedmiotów}
+Możliwość by użytkownik mógł zrezygnować z wyświetlania zajęć z wybranego przedmiotu.
+
+\paragraph{Konta użytkowników}
+Dzięki systemowi logowań możaby powiązać dane takiej jak plany z poprzednich semestrów użytkownika czy zapisane konfiguracje z kontem danej osoby.
 
 \end{document}
 
