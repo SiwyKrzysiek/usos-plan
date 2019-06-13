@@ -3,6 +3,12 @@
     ViewData["Title"] = "Poprany plan";
 }
 
+<h2>Wczytano pojedyńcze zajęcia:</h2>
+@foreach (var universityClass in Model.SingularClasses)
+{
+    <p>@universityClass.Name @universityClass.Type @universityClass.GroupNumber @universityClass.DayOfWeek @universityClass.StartTime</p>
+}
+
 <h2>Wczytano następujące grupy zajęć</h2>
 @foreach (var classGroup in Model.ClassGroups)
 {
@@ -12,6 +18,7 @@
         <p>@universityClass.Name @universityClass.Type @universityClass.GroupNumber @universityClass.DayOfWeek @universityClass.StartTime</p>
     }
 }
+
 @section scripts {
     <script>
 
