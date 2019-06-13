@@ -76,19 +76,19 @@
     text-align: center;
 }
 
-.lecture {
+.spot.lecture {
     background-color: #a8c9ff;
 }
 
-.exercise {
+.spot.exercise {
     background-color: #f7ffa5;
 }
 
-.seminar {
+.spot.seminar {
     background-color: #eda8ff;
 }
 
-.conflict {
+.spot.conflict {
     background-color: red;
 }
 

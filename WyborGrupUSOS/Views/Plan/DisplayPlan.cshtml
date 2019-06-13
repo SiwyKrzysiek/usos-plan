@@ -82,16 +82,24 @@
             for (let universityClass of model.singularClasses) {
                 displayClass(universityClass);
             }
+
+            for (let group of model.classGroups) {
+                displayClass(group.classes[0]);
+            }
         }
 
         function classSelectChanged(groupNumber) {
             let modelGroup = model.classGroups[groupNumber];
             let id = modelGroup.name + "Select";
-            let oldValue = modelGroup.selected;
-            let newValue = document.getElementById(id).value;
+            let oldValue = parseInt(modelGroup.selected);
+            let newValue = parseInt(document.getElementById(id).value);
             modelGroup.selected = newValue;
 
-            alert(oldValue);
+            let oldClass = modelGroup.classes[oldValue - 1];
+            removeClassFromDisplay(oldClass);
+
+            let newClass = modelGroup.classes[newValue - 1];
+            displayClass(newClass);
         }
 
         function addTimeStamps(model) {
@@ -106,6 +114,29 @@
                 }
             }
 
+        }
+
+        function removeClassFromDisplay(universityClass) {
+            let row = universityClass.startIndex;
+            let column = universityClass.dayOfWeek - 1;
+
+            let tr = table.childNodes[row + 1];
+            let td = tr.childNodes[column];
+            let spot = td.firstChild;
+            spot.classList.value = ["spot"];
+
+            let divToRemove = (new Array(...spot.childNodes)).find(d => d.firstChild.innerText === universityClass.name);
+            spot.removeChild(divToRemove);
+
+            if (spot.childNodes.length <= 0)
+                spot.classList.add("empty");
+            else if (spot.childNodes.length > 1)
+                spot.classList.add("conflict");
+            else {
+                let newClass = spot.firstChild.classList[1];
+                spot.classList.add(newClass);
+            }
+            
         }
 
         function displayClass(universityClass) {
@@ -132,7 +163,7 @@
                 case 0:
                     return "lecture";
                 case 1:
-                    return "exercises";
+                    return "exercise";
                 case 2:
                     return "laboratories";
                 case 3:
@@ -145,6 +176,7 @@
         function createClassDiv(universityClass) {
             let div = document.createElement("div");
             div.classList.add("class");
+            div.classList.add(getStyleForClassType(universityClass.type));
 
             let p = document.createElement("p");
             p.classList.add("className");
